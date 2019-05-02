@@ -31,6 +31,6 @@ Checking password for minecraft...
 Found password for 'minecraft' 5 times in the dataset!
 Checking password for stackoverflow... ✓
 ==================================================
-Found 1 dangerous password:
+Found 1 previously breached password:
 minecraft:E38AD214943DAAD1D64C102FAEC29DE4AFE9DA3D:5
 ```
