@@ -17,7 +17,7 @@ setup(
     install_requires=requirements,
     license="MIT",
     include_package_data=True,
-    name='keepassxc pwned',
+    name='keepassxc-pwned',
     packages=find_packages(include=['keepassxc_pwned']),
     entry_points = {
         'console_scripts': [
