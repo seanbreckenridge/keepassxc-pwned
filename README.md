@@ -13,6 +13,8 @@ Install: `pip3 install git+https://github.com/seanbreckenridge/keepassxc-pwned`
 
 Run: `keepassxc_pwned ~/database.kdbx`
 
+Pass the `--plaintext` flag to print breached passwords in plaintext, e.g. `keepassxc_pwned ~/database.kdbx --plaintext`
+
 Sample Output:
 
 ```
