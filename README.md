@@ -9,6 +9,18 @@ This checks a KeePassXC database against previously cracked [haveibeenpwned](htt
 * `keepassxc-cli` binary, which is installed with `brew cask install keepassxc`.
 * python 3.7
 
+If you get the following error while using `keepassxc-cli`:
+
+```
+dyld: Library not loaded: /usr/local/opt/quazip/lib/libquazip.1.dylib
+  Referenced from: /usr/local/bin/keepassxc-cli
+  Reason: image not found
+Abort trap: 6
+```
+
+... running `brew install quazip` should fix that.
+
+
 Install: `pip3 install git+https://github.com/seanbreckenridge/keepassxc-pwned`
 
 Run: `keepassxc_pwned ~/database.kdbx`
