@@ -2,12 +2,78 @@
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-This checks a KeePassXC database against previously cracked [haveibeenpwned](https://haveibeenpwned.com/) passwords.
+This checks a [KeePassXC](https://keepassxc.org/) database against previously cracked [haveibeenpwned](https://haveibeenpwned.com/) passwords.
 
 #### Requirements
 
-* `keepassxc-cli` binary, which is installed with `brew cask install keepassxc`.
+* `keepassxc-cli` binary (typically installed with KeePassXC)
 * python 3.7
+
+#### Install
+
+`pip3 install git+https://github.com/seanbreckenridge/keepassxc-pwned`
+
+#### Run
+
+Run: `keepassxc_pwned ~/database.kdbx`
+
+```
+Check a keepassxc database against previously cracked haveibeenpwned passwords
+
+Usage:
+    keepassxc_pwned [--help]
+    keepassxc_pwned <KDBX_DATABASE_FILE> [--plaintext] [--no-logs]
+
+Options:
+    KDBX_DATABASE_FILE      The path to your keepassxc database file
+    --plaintext             Print breached passwords in plaintext; defaults to sha1 hashes
+    --no-logs               Don't print status messages, just the end
+
+Examples:
+    keepassxc_pwned ~/database.kdbx
+    keepassxc_pwned ~/database.kdbx --plaintext
+```
+
+Sample Run:
+
+```
+$ keepassxc_pwned ~/Documents/updated_database.kdbx
+Insert password for /home/sean/Documents/updated_database.kdbx:
+Checking password for Amazon...
+Checking password for Github...
+Checking password for Netflix...
+Checking password for Steam...
+Checking password for UPS...
+Checking password for letterboxd...
+Checking password for linkedin...
+Checking password for minecraft...
+Found password for 'minecraft' 3 times in the dataset!
+Checking password for soundcloud...
+Checking password for stackoverflow...
+Checking password for wikipedia...
+==================================================
+Found 1 previously breached password:
+minecraft:5BAA61E4C9B93F3F0682250B6CF8331B7EE68FD8:3
+```
+
+You can also import this to use in python code...
+
+```
+from keepassxc_pwned import check_password
+check_password("password")
+```
+
+*Note: `check_password` doesn't attempt to do any rate limiting.*
+
+... or enter the password manually...
+
+```
+$ python3 -m keepassxc_pwned
+Password to check:
+Found password 1054 times!
+```
+
+#### Troubleshooting
 
 If you get the following error while using `keepassxc-cli`:
 
@@ -18,33 +84,8 @@ dyld: Library not loaded: /usr/local/opt/quazip/lib/libquazip.1.dylib
 Abort trap: 6
 ```
 
-... running `brew install quazip` should fix that.
+... installing `quazip` should fix that:
 
+- `brew install quazip` (Mac)
 
-Install: `pip3 install git+https://github.com/seanbreckenridge/keepassxc-pwned`
-
-Run: `keepassxc_pwned ~/database.kdbx`
-
-Pass the `--plaintext` flag to print breached passwords in plaintext, e.g. `keepassxc_pwned ~/database.kdbx --plaintext`
-
-Sample Output:
-
-```
-Checking password for Apple... ✓
-Checking password for Discord... ✓
-Checking password for Dropbox... ✓
-Checking password for Github... ✓
-Checking password for Heroku... ✓
-Checking password for Mega... ✓
-Checking password for Spotify... ✓
-Checking password for Steam... ✓
-Checking password for Streamable... ✓
-Checking password for Vimeo... ✓
-Checking password for Venmo... ✓
-Checking password for minecraft...
-Found password for 'minecraft' 5 times in the dataset!
-Checking password for stackoverflow... ✓
-==================================================
-Found 1 previously breached password:
-minecraft:E38AD214943DAAD1D64C102FAEC29DE4AFE9DA3D:5
-```
+- `sudo apt install libquazip-dev` (Linux)
