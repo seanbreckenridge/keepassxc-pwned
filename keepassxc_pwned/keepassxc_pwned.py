@@ -9,7 +9,7 @@ Usage:
 Options:
     KDBX_DATABASE_FILE      The path to your keepassxc database file
     --plaintext             Print breached passwords in plaintext; defaults to sha1 hashes
-    --no-logs               Don't print status messages, just the end
+    --no-logs               Don't print status messages, just the summary message
 
 Examples:
     keepassxc_pwned ~/database.kdbx
