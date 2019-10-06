@@ -33,6 +33,10 @@ from keepassxc_pwned.password import lookup_pwned
 
 args = docopt.docopt(__doc__)
 kdbx_db_location = args["<KDBX_DATABASE_FILE>"]
+if kdbx_db_location is None:
+    print("Error: You didn't provide a database file to check!", file=sys.stderr)
+    print(__doc__)
+    sys.exit(1)
 print_plaintext = args["--plaintext"]
 log_level = logging.ERROR if args["--no-logs"] else logging.INFO
 logger = logging.getLogger("keepassxc_pwned_logger")
