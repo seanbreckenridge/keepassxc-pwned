@@ -7,7 +7,7 @@ This checks a [KeePassXC](https://keepassxc.org/) database against previously cr
 #### Requirements
 
 * `keepassxc-cli` binary (typically installed with KeePassXC)
-* python 3.7
+* python 3.7 or above
 
 #### Install
 
