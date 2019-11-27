@@ -26,6 +26,7 @@ import subprocess
 import xml.etree.cElementTree as ET
 from dataclasses import dataclass
 from typing import List
+from distutils.version import StrictVersion
 
 import docopt
 
@@ -86,7 +87,7 @@ class Credential:
             return self.password
 
 
-def subprocess_verify_binary() -> str:
+def verify_binary_exists():
     """Make sure the keepassxc-cli binary exists"""
     shell_output = subprocess.run(["which", "keepassxc-cli"], capture_output=True)
     if shell_output.returncode != 0:
@@ -94,16 +95,35 @@ def subprocess_verify_binary() -> str:
             "Could not find the keepassxc-cli binary. Verify its installed and on your $PATH."
         )
         sys.exit(1)
-    keepassxc_binary_location = shell_output.stdout.decode("utf-8").strip()
-    return keepassxc_binary_location
 
 
-def parse_keepassxc_cli_xml(binary, kdbx_location) -> List[Credential]:
+def backwards_compatible_export() -> str:
+    """
+    In KeepassXC version 2.5.0, the extract command was re-named to export
+    Attempt to parse the version number and generate the correct subcommand
+    """
+    version_proc = subprocess.run(
+        shlex.split("keepassxc-cli --version"),
+        encoding='utf-8',
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    version = version_proc.stdout.strip()
+    try:
+        if StrictVersion(version) < StrictVersion('2.5.0'):
+            return 'extract'
+        else:
+            return 'export'
+    except ValueError:  # could not parse version number
+        return "export"
+
+def parse_keepassxc_cli_xml(kdbx_location) -> List[Credential]:
     """Call the keepassxc-cli binary and extract the title, usernames and passwords"""
 
+    keepassxc_cli_subcommand = backwards_compatible_export()
     credentials = []
     # use command line binary to passwords from kdbx in XML
-    command = "{} extract {}".format(binary, kdbx_location)
+    command = "keepassxc-cli {} {}".format(keepassxc_cli_subcommand, kdbx_location)
     password = getpass.getpass("Insert password for {}: ".format(kdbx_location))
     keepassxc_output = subprocess.run(
         shlex.split(command),
@@ -149,10 +169,8 @@ def main():
     if not os.path.exists(kdbx_db_location):
         logger.critical("Could not find a file at {}".format(kdbx_db_location))
         sys.exit(1)
-    keepassxc_binary_location: str = subprocess_verify_binary()
-    credentials: List[Credential] = parse_keepassxc_cli_xml(
-        keepassxc_binary_location, kdbx_db_location
-    )
+    verify_binary_exists()  # make sure keepassxc-cli exists
+    credentials: List[Credential] = parse_keepassxc_cli_xml(kdbx_db_location)
     breached_passwords = []
     for c in credentials:
         logger.info(f"Checking password for {c.display()}...")

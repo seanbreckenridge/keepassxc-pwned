@@ -88,3 +88,5 @@ Abort trap: 6
 - `brew install quazip` (Mac)
 
 - `sudo apt install libquazip-dev` (Linux)
+
+If `keepassxc-cli` fails with an error message like "Invalid Command extract.", the command was changed in KeePassXC 2.5.0, and is now called `export`. Upgrade KeePassXC to the latest version, and try again.
