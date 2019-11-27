@@ -11,7 +11,7 @@ This checks a [KeePassXC](https://keepassxc.org/) database against previously cr
 
 #### Install
 
-`pip3 install git+https://github.com/seanbreckenridge/keepassxc-pwned`
+`pip3 install keepassxc-pwned`
 
 #### Run
 
@@ -90,3 +90,10 @@ Abort trap: 6
 - `sudo apt install libquazip-dev` (Linux)
 
 If `keepassxc-cli` fails with an error message like "Invalid Command extract.", the command was changed in KeePassXC 2.5.0, and is now called `export`. Upgrade KeePassXC to the latest version, and try again.
+
+#### Tests
+
+* Clone this repository
+* Install `pexpect` and `pytest`: `pip3 install pexpect pytest`
+* Run `pytest` in the root directory
+
