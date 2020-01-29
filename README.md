@@ -22,16 +22,20 @@ Check a keepassxc database against previously cracked haveibeenpwned passwords
 
 Usage:
     keepassxc_pwned [--help]
-    keepassxc_pwned <KDBX_DATABASE_FILE> [--plaintext] [--no-logs]
+    keepassxc_pwned [-pq] [-k KEY] <KDBX_DATABASE_FILE>
 
-Options:
-    KDBX_DATABASE_FILE      The path to your keepassxc database file
-    --plaintext             Print breached passwords in plaintext; defaults to sha1 hashes
-    --no-logs               Don't print status messages, just the summary message
+KDBX_DATABASE_FILE            The path to your
+                              keepassxc database file
+-p, --plaintext               Print breached passwords in plaintext;
+                              defaults to sha1 hashes
+-q, --no-logs                 Don't print status messages,
+                              just the summary message
+-k KEY, --key-file=KEY_FILE   Key file for the database
 
 Examples:
     keepassxc_pwned ~/database.kdbx
     keepassxc_pwned ~/database.kdbx --plaintext
+    keepassxc_pwned -k ~/key_file ~/database.kdbx
 ```
 
 Sample Run:

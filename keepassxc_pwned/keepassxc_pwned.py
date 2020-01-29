@@ -4,16 +4,20 @@
 
 Usage:
     keepassxc_pwned [--help]
-    keepassxc_pwned <KDBX_DATABASE_FILE> [--plaintext] [--no-logs]
+    keepassxc_pwned [-pq] [-k KEY] <KDBX_DATABASE_FILE>
 
-Options:
-    KDBX_DATABASE_FILE      The path to your keepassxc database file
-    --plaintext             Print breached passwords in plaintext; defaults to sha1 hashes
-    --no-logs               Don't print status messages, just the summary message
+KDBX_DATABASE_FILE            The path to your
+                              keepassxc database file
+-p, --plaintext               Print breached passwords in plaintext;
+                              defaults to sha1 hashes
+-q, --no-logs                 Don't print status messages,
+                              just the summary message
+-k KEY, --key-file=KEY_FILE   Key file for the database
 
 Examples:
     keepassxc_pwned ~/database.kdbx
     keepassxc_pwned ~/database.kdbx --plaintext
+    keepassxc_pwned -k ~/key_file ~/database.kdbx
 """
 
 import sys
@@ -38,6 +42,7 @@ if kdbx_db_location is None:
     print("Error: You didn't provide a database file to check!", file=sys.stderr)
     print(__doc__)
     sys.exit(1)
+key_file = args["--key-file"]
 print_plaintext = args["--plaintext"]
 log_level = logging.ERROR if args["--no-logs"] else logging.INFO
 logger = logging.getLogger("keepassxc_pwned_logger")
@@ -104,18 +109,27 @@ def backwards_compatible_export() -> str:
     """
     version_proc = subprocess.run(
         shlex.split("keepassxc-cli --version"),
-        encoding='utf-8',
+        encoding="utf-8",
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
     version = version_proc.stdout.strip()
     try:
-        if StrictVersion(version) < StrictVersion('2.5.0'):
-            return 'extract'
+        if StrictVersion(version) < StrictVersion("2.5.0"):
+            return "extract"
         else:
-            return 'export'
+            return "export"
     except ValueError:  # could not parse version number
         return "export"
+
+
+def key_file_flag() -> str:
+    """If the user passed a key file, return the keepassxc-cli flag"""
+    if key_file is not None:
+        return "-k {}".format(key_file)
+    else:
+        return ""
+
 
 def parse_keepassxc_cli_xml(kdbx_location) -> List[Credential]:
     """Call the keepassxc-cli binary and extract the title, usernames and passwords"""
@@ -123,7 +137,9 @@ def parse_keepassxc_cli_xml(kdbx_location) -> List[Credential]:
     keepassxc_cli_subcommand = backwards_compatible_export()
     credentials = []
     # use command line binary to passwords from kdbx in XML
-    command = "keepassxc-cli {} {}".format(keepassxc_cli_subcommand, kdbx_location)
+    command = "keepassxc-cli {} {} {}".format(
+        keepassxc_cli_subcommand, key_file_flag(), kdbx_location
+    )
     password = getpass.getpass("Insert password for {}: ".format(kdbx_location))
     keepassxc_output = subprocess.run(
         shlex.split(command),
@@ -169,6 +185,10 @@ def main():
     if not os.path.exists(kdbx_db_location):
         logger.critical("Could not find a file at {}".format(kdbx_db_location))
         sys.exit(1)
+    if key_file is not None:
+        if not os.path.exists(key_file):
+            logger.critical("Could not find a key file at {}".format(key_file))
+            sys.exit(1)
     verify_binary_exists()  # make sure keepassxc-cli exists
     credentials: List[Credential] = parse_keepassxc_cli_xml(kdbx_db_location)
     breached_passwords = []

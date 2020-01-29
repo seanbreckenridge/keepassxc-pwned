@@ -34,6 +34,6 @@ setup(
         ]
     },
     url='https://github.com/seanbreckenridge/keepassxc-pwned',
-    version='0.2.3',
+    version='0.2.4',
     zip_safe=True,
 )
