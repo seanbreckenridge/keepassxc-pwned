@@ -1,6 +1,6 @@
 # KeepassXC-Pwned
 
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![PyPi version](https://img.shields.io/pypi/v/keepassxc_pwned.svg)](https://pypi.python.org/pypi/keepassxc_pwned) [![Python 3.6|3.7](https://img.shields.io/pypi/pyversions/keepassxc_pwned.svg)](https://pypi.python.org/pypi/keepassxc_pwned) [![Build Status](https://travis-ci.com/seanbreckenridge/keepassxc-pwned.svg?branch=master)](https://travis-ci.com/seanbreckenridge/keepassxc-pwned) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 This checks a [KeePassXC](https://keepassxc.org/) database against previously cracked [haveibeenpwned](https://haveibeenpwned.com/) passwords.
 
