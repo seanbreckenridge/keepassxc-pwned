@@ -159,9 +159,9 @@ def parse_keepassxc_cli_xml(kdbx_location) -> List[Credential]:
         if group.find("Name").text == "Recycle Bin":
             continue
         # grab username, title, and passwords
-        for entry in filter(lambda g: g.tag == "Entry", group.getchildren()):
+        for entry in filter(lambda g: g.tag == "Entry", list(group)):
             c = Credential()
-            for str_node in filter(lambda e: e.tag == "String", entry.getchildren()):
+            for str_node in filter(lambda e: e.tag == "String", list(entry)):
                 key = str_node.find("Key").text
                 value = str_node.find("Value").text
                 if key == "Title":
