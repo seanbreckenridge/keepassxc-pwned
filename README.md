@@ -78,7 +78,8 @@ Found password 1054 times!
 
 #### Privacy concerns
 The only thing that leaves your system is the SHA-1 hash of your passwords.
-This tool does not transmit your accounts' details(e.g. your GitHub account) including the username or the plaintext password.
+This tool does not transmit your accounts' details(e.g. your GitHub account) including your username or the plaintext password.
+
 #### Troubleshooting
 
 If you get the following error while using `keepassxc-cli`:
