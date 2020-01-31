@@ -76,6 +76,10 @@ Password to check:
 Found password 1054 times!
 ```
 
+#### Privacy concerns
+This tool only transmits the first 5 characters of the SHA-1 hash of your passwords.
+You can read more about that [here](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity).
+
 #### Troubleshooting
 
 If you get the following error while using `keepassxc-cli`:
