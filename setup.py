@@ -4,7 +4,8 @@
 import io
 from setuptools import setup, find_packages
 
-requirements = ['requests', 'docopt']
+with io.open("requirements.txt", 'r', encoding='utf-8') as req_file:
+    requirements = req_file.read().splitlines()
 
 with io.open("README.md", 'r', encoding='utf-8') as readme:
     readme_contents = readme.read()
@@ -30,10 +31,10 @@ setup(
     packages=find_packages(include=['keepassxc_pwned']),
     entry_points = {
         'console_scripts': [
-            "keepassxc_pwned = keepassxc_pwned.keepassxc_pwned:main"
+            "keepassxc_pwned = keepassxc_pwned.cli:main"
         ]
     },
     url='https://github.com/seanbreckenridge/keepassxc-pwned',
-    version='0.2.5',
+    version='0.3.0',
     zip_safe=True,
 )
