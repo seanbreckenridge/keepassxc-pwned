@@ -77,8 +77,8 @@ Found password 1054 times!
 ```
 
 #### Privacy concerns
-The only thing that leaves your system is the SHA-1 hash of your passwords.
-This tool does not transmit your accounts' details(e.g. your GitHub account) including your username or the plaintext password.
+This tool only transmits the first 5 characters of the SHA-1 hash of your passwords.
+You can read more about that [here](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity).
 
 #### Troubleshooting
 
