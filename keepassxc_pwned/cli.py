@@ -6,6 +6,7 @@ from typing import Mapping, List
 import click
 
 from .log import logger, set_level
+from .exceptions import PwnedPasswordException
 
 
 @click.command()
@@ -59,14 +60,18 @@ def main(plaintext, key_file, verbose, quiet, database):
     for credential in db.credentials:
         logger.info("Checking password for {}...".format(credential.display()))
         # pw_cache __missing__ makes the http request to get the count
-        occurrence_count = pw_cache[credential.sha1]
-        if occurrence_count > 0:
-            logger.info(
-                "Found password for '{}' {} times in the dataset!".format(
-                    credential.display(), occurrence_count
+        try:
+            occurrence_count = pw_cache[credential.sha1]
+            if occurrence_count > 0:
+                logger.info(
+                    "Found password for '{}' {} times in the dataset!".format(
+                        credential.display(), occurrence_count
+                    )
                 )
-            )
-            breached_passwords.append(credential)
+                breached_passwords.append(credential)
+        except PwnedPasswordException as http_err:
+            logger.critical(str(http_err))
+            logger.critical("Ignoring previous entry due to HTTP error")
     breached_passwords_count = len(breached_passwords)
     if breached_passwords_count > 0:
         print(

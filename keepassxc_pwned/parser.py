@@ -147,4 +147,5 @@ class Database(AutoRepr):
                     self._credentials.append(cred)
                 except ValueError as no_pw:
                     logger.debug(str(no_pw))
+        logger.debug("KeepassXC parsed entry count: {}".format(len(self._credentials)))
         return self._credentials

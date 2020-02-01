@@ -16,8 +16,9 @@ def request_password_hash(hash_head: str) -> requests.Response:
     """
     Requests the Response object for the corresponding hash head (5 chars)
     Raises PwnedPasswordException on unrecoverable errors
-   """
+    """
     url = "https://api.pwnedpasswords.com/range/" + hash_head
+    logger.debug("Requesting {}".format(url))
     res = requests.get(url, headers=default_headers)
     if res.status_code >= 400:
         if res.status_code == 429:
