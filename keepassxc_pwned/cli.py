@@ -1,10 +1,11 @@
-from typing import Mapping, Tuple
+import pathlib
+import logging
+
+from typing import Mapping, List
 
 import click
 
-from .parser import Database, Credential
-from .utils import PasswordCache
-from .log import logger
+from .log import logger, set_level
 
 
 @click.command()
@@ -15,7 +16,13 @@ from .log import logger
     is_flag=True,
     help="Print breached passwords in plaintext; defaults to sha1 hashes.",
 )
-@click.option("-k", "--key-file", required=False, type=click.Path(exists=True))
+@click.option(
+    "-k",
+    "--key-file",
+    required=False,
+    type=click.Path(exists=True),
+    help="Key file for the database",
+)
 @click.option(
     "-v", "--verbose", default=False, is_flag=True, help="Print debug messages"
 )
@@ -26,29 +33,53 @@ from .log import logger
     is_flag=True,
     help="Don't print status messages, just the summary",
 )
-@click.argument("database", required=1, type=click.Path(exists=True))
+@click.argument("database", required=True, type=click.Path(exists=True))
 def main(plaintext, key_file, verbose, quiet, database):
-    # TODO: implement plaintext, verbose, quiet
-    db: Database = Database(database, key_file)
-    # maps sha1 hashes to credentials and their occurence counts
-    breached_passwords: Mapping[str, Tuple[Credential, int]] = PasswordCache()
-    for c in db.credentials:
-        logger.info("Checking password for {}...".format(c.display()))
-        count: int = breached_passwords[c.sha1]
-        if count != 0:
+    """Check a keepassxc database against previously cracked haveibeenpwned passwords"""
+
+    # setup logs before other imports to ensure correct log level
+    log_level: int = logging.INFO
+    # cant run verbose and quiet simultaneously, choose higher value
+    if verbose:
+        log_level = logging.DEBUG
+    elif quiet:
+        log_level = logging.ERROR
+
+    set_level(log_level)
+
+    from .parser import Database, Credential
+    from .cache import PasswordCache
+
+    if key_file is not None:
+        key_file: pathlib.Path = pathlib.Path(key_file)
+    db: Database = Database(pathlib.Path(database), key_file)
+    # maps sha1 hashes to credentials and their occurrence counts
+    breached_passwords: List[Credential] = []
+    pw_cache: Mapping[str, int] = PasswordCache()
+    for credential in db.credentials:
+        logger.info("Checking password for {}...".format(credential.display()))
+        # pw_cache __missing__ makes the http request to get the count
+        occurrence_count = pw_cache[credential.sha1]
+        if occurrence_count > 0:
             logger.info(
                 "Found password for '{}' {} times in the dataset!".format(
-                    c.display(), count
+                    credential.display(), occurrence_count
                 )
             )
-    logger.warning("=" * 50)
-    if breached_passwords:
+            breached_passwords.append(credential)
+    breached_passwords_count = len(breached_passwords)
+    if breached_passwords_count > 0:
         print(
             "Found {} previously breached password{}:".format(
-                len(breached_passwords), "s" if len(breached_passwords) > 1 else ""
+                breached_passwords_count, "s" if breached_passwords_count > 1 else ""
             )
         )
-        for c in breached_passwords:
-            print("{}:{}:{}".format(c.display(), c.sha1, c.count))
+        for credential in breached_passwords:
+            display_pw: str = credential.password if plaintext else credential.sha1
+            print(
+                "{}:{}:{}".format(
+                    credential.display(), display_pw, pw_cache[credential.sha1]
+                )
+            )
     else:
         print("None of your passwords have been found breached.")

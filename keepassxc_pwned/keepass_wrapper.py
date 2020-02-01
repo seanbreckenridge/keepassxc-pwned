@@ -13,6 +13,9 @@ from .log import logger
 
 
 class KeepassWrapper:
+    """
+    Functions that create a subprocess and call the keepassxc-cli shell command
+    """
 
     subprocess_piped = partial(
         subprocess.run, encoding="utf-8", stdout=subprocess.PIPE, stderr=subprocess.PIPE
@@ -33,7 +36,9 @@ class KeepassWrapper:
         version_proc: subprocess.CompletedProcess = KeepassWrapper.subprocess_piped(
             shlex.split("keepassxc-cli --version")
         )
-        return StrictVersion(version_proc.stdout.strip())
+        version_str: str = version_proc.stdout.strip()
+        logger.debug("keepassxc-cli version: {}".format(version_str))
+        return StrictVersion(version_str)
 
     @classmethod
     def backwards_compatible_export(cls) -> str:
@@ -60,20 +65,22 @@ class KeepassWrapper:
         """Calls the keepassxc-cli export command, returns the output from the command"""
 
         command_parts: List[str] = ["keepassxc-cli", cls.backwards_compatible_export()]
-        if database_keyfile:
+        if database_keyfile is not None:
             command_parts.extend(["-k", str(database_keyfile)])
         command_parts.append(str(database_file))
-
+        command_str: str = " ".join(command_parts)
+        logger.debug("Export database command: {}".format(command_str))
         keepassxc_output: subprocess.CompletedProcess = KeepassWrapper.subprocess_piped(
-            shlex.split(" ".join(command_parts)), input=database_password,
+            shlex.split(command_str), input=database_password,
         )
         if keepassxc_output.returncode != 0:
             logger.critical(keepassxc_output.stderr)
             sys.exit(1)
-        # python doesnt like the version tag, remove the first line
+        # python doesn't like the version tag, remove the first line
         return keepassxc_output.stdout.split(os.linesep, 2)[-1]
 
 
+# When this is imported, make sure that the keepassxc-cli binary exists
 binary_exists = False
 if not binary_exists:
     KeepassWrapper.verify_binary_exists()

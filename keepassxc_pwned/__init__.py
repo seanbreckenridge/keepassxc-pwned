@@ -1,5 +1,7 @@
-from .password import lookup_pwned
+from .log import setup_logs
 
+# called when anything is imported from this package
+setup_logs()
 
-def check_password(password: str) -> int:
-    return lookup_pwned(password)
+from .password import lookup_pwned as check_password
+from .exceptions import PwnedPasswordException

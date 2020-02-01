@@ -1,7 +1,10 @@
 include LICENSE
 include README.md
+include requirements.txt
+
 exclude Makefile
 exclude .travis.yml
+exclude requirements-dev.txt
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
