@@ -1,5 +1,8 @@
 # Test non-interactive authentication methods
 
+from keepassxc_pwned.parser import Database
+from keepassxc_pwned.cli import main_wrapper
+
 from .common import *
 
 test_kdbx_db = os.path.join(db_files, "empty.kdbx")
@@ -49,3 +52,10 @@ def test_empty_db_keyfile(empty_db_keyfile):
 def test_empty_db_with_environment_var(empty_db_with_environment_var):
     assert len(empty_db_with_environment_var.credentials) == 0
 
+def test_keyfile_with_main_wrapper(capsys):
+    os.environ["KEEPASSXC_PWNED_PASSWD"] = kdbx_password
+    main_wrapper(False, key_file, False, True, key_protected_kdbx_db)
+    captured = capsys.readouterr()
+    captured_lines = captured.out.splitlines()
+    assert 1 == len(captured_lines)
+    assert captured_lines[0] == "None of your passwords have been found breached."

@@ -1,5 +1,7 @@
 # Make sure that entries in the recycle bin are ignored
 
+from keepassxc_pwned.parser import Database, Credential
+
 from .common import *
 
 

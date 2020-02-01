@@ -2,7 +2,6 @@ import os
 import shlex
 import pathlib
 
-import vcr
 import pytest
 
 from keepassxc_pwned.parser import Database, Credential

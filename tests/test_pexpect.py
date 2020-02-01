@@ -17,12 +17,9 @@ def test_environment_auth():
     p = shlex.split("{} {}".format(keepassxc_binary_loc, protected_keyfile))
     environment = deepcopy(os.environ)
     environment["KEEPASSXC_PWNED_PASSWD"] = "test"
-    child_proc = pexpect.spawn(
-        " ".join(p), cwd=this_dir, env=environment
-    )
+    child_proc = pexpect.spawn(" ".join(p), cwd=this_dir, env=environment)
     child_proc.wait()
     output = child_proc.read().decode("utf-8")
     last_line = output.splitlines()[-1]
     assert len(output.splitlines()) == 1
     assert last_line == "None of your passwords have been found breached."
-
