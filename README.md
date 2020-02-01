@@ -7,7 +7,7 @@ This checks a [KeePassXC](https://keepassxc.org/) database against previously cr
 #### Requirements
 
 * `keepassxc-cli` binary (typically installed with KeePassXC)
-* python 3.7 or above
+* python 3.6 or above
 
 #### Install
 
@@ -18,24 +18,18 @@ This checks a [KeePassXC](https://keepassxc.org/) database against previously cr
 Run: `keepassxc_pwned ~/database.kdbx`
 
 ```
-Check a keepassxc database against previously cracked haveibeenpwned passwords
+Usage: keepassxc_pwned [OPTIONS] DATABASE
 
-Usage:
-    keepassxc_pwned [--help]
-    keepassxc_pwned [-pq] [-k KEY] <KDBX_DATABASE_FILE>
+  Check a keepassxc database against previously cracked haveibeenpwned
+  passwords
 
-KDBX_DATABASE_FILE            The path to your
-                              keepassxc database file
--p, --plaintext               Print breached passwords in plaintext;
-                              defaults to sha1 hashes
--q, --no-logs                 Don't print status messages,
-                              just the summary message
--k KEY, --key-file=KEY_FILE   Key file for the database
-
-Examples:
-    keepassxc_pwned ~/database.kdbx
-    keepassxc_pwned ~/database.kdbx --plaintext
-    keepassxc_pwned -k ~/key_file ~/database.kdbx
+Options:
+  -p, --plaintext      Print breached passwords in plaintext; defaults to sha1
+                       hashes.
+  -k, --key-file PATH  Key file for the database
+  -v, --verbose        Print debug messages
+  -q, --quiet          Don't print status messages, just the summary
+  --help               Show this message and exit.
 ```
 
 Sample Run:
@@ -77,6 +71,7 @@ Found password 1054 times!
 ```
 
 #### Privacy concerns
+
 This tool only transmits the first 5 characters of the SHA-1 hash of your passwords.
 You can read more about that [here](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity).
 
@@ -103,5 +98,6 @@ If `keepassxc-cli` fails with an error message like "Invalid Command extract.", 
 
 * Clone this repository
 * Install dev dependencies: `pip3 install -r requirements-dev.txt`
-* Run `pytest` in the root directory
+* `mypy keepassxc_pwned`
+* `pytest`
 
