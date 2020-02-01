@@ -1,3 +1,4 @@
 mypy
 pexpect
 pytest
+vcrpy

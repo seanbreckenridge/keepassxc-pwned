@@ -102,6 +102,6 @@ If `keepassxc-cli` fails with an error message like "Invalid Command extract.", 
 #### Tests
 
 * Clone this repository
-* Install `pexpect` and `pytest`: `pip3 install pexpect pytest`
+* Install dev dependencies: `pip3 install -r requirements-dev.txt`
 * Run `pytest` in the root directory
 
