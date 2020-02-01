@@ -21,14 +21,15 @@ def request_password_hash(hash_head: str) -> requests.Response:
     logger.debug("Requesting {}".format(url))
     res = requests.get(url, headers=default_headers)
     if res.status_code >= 400:
-        if res.status_code == 429:
-            logger.warning("Hit rate limit, waiting for 10 seconds... ")
-            time.sleep(10)
-            return request_password_hash(hash_head)
-        else:
+        # on occasion I've had random 409 cloudflare errors
+        if res.status_code in [400, 403, 404]: # https://haveibeenpwned.com/API/v2#ResponseCodes
             raise PwnedPasswordException(
                 {"url": url, "status_code": res.status_code, "http_text": res.text}
             )
+        else:
+            logger.warning("Request failed, retrying...")
+            time.sleep(10)
+            return request_password_hash(hash_head)
     return res
 
 
