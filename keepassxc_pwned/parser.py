@@ -1,3 +1,4 @@
+import os
 import pathlib
 import hashlib
 import xml.etree.cElementTree as ET
@@ -95,9 +96,14 @@ class Database(AutoRepr):
     def password(self) -> str:
         """
         Returns the password for this database
-        Prompts the user for password if not set
+        If the KEEPASSXC_PWNED_PASSWD environment variable is set,
+        uses that else, prompts the user for password
         """
         if self._password is not None:
+            return self._password
+        elif "KEEPASSXC_PWNED_PASSWD" in os.environ:
+            logger.debug("Using password from KEEPASSXC_PWNED_PASSWD environment variable")
+            self._password = os.environ["KEEPASSXC_PWNED_PASSWD"]
             return self._password
         else:
             self._password = getpass(
