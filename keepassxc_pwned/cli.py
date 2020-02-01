@@ -37,6 +37,11 @@ from .exceptions import PwnedPasswordException
 @click.argument("database", required=True, type=click.Path(exists=True))
 def main(plaintext, key_file, verbose, quiet, database):
     """Check a keepassxc database against previously cracked haveibeenpwned passwords"""
+    main_wrapper(plaintext, key_file, verbose, quiet, database)
+
+
+def main_wrapper(plaintext, key_file, verbose, quiet, database):
+    """Called from main click command"""
 
     # setup logs before other imports to ensure correct log level
     log_level: int = logging.INFO

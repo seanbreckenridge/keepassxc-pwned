@@ -73,7 +73,9 @@ class Credential(AutoRepr):
         # must have at least a password, which would be displayed as sha1
         for a in self.__class__.display_attrs:
             try:
-                return getattr(self, a)
+                d = getattr(self, a)
+                if d is not None:
+                    return d
             except AttributeError:
                 pass
 
@@ -102,7 +104,9 @@ class Database(AutoRepr):
         if self._password is not None:
             return self._password
         elif "KEEPASSXC_PWNED_PASSWD" in os.environ:
-            logger.debug("Using password from KEEPASSXC_PWNED_PASSWD environment variable")
+            logger.debug(
+                "Using password from KEEPASSXC_PWNED_PASSWD environment variable"
+            )
             self._password = os.environ["KEEPASSXC_PWNED_PASSWD"]
             return self._password
         else:

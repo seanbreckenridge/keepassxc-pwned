@@ -35,6 +35,13 @@ def test_empty_db(empty_db):
     assert len(empty_db.credentials) == 0
 
 
+def test_empty_db_raises_exit(empty_db):
+    empty_db._password = "wrong password"
+    with pytest.raises(SystemExit):
+        empty_db._call_keepassxc_cli()
+    assert empty_db._xml_tree is None
+
+
 def test_empty_db_keyfile(empty_db_keyfile):
     assert len(empty_db_keyfile.credentials) == 0
 
