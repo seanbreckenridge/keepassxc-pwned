@@ -38,7 +38,7 @@ class Credential(AutoRepr):
                 if key in self.__class__.parsed_attrs:
                     setattr(self, key, value)
 
-        if not hasattr(self, "password"):
+        if not hasattr(self, "password") or (hasattr(self, "password") and self.password is None):
             raise ValueError("Ignoring entry with no password: {}".format(self))
 
         self._sha1: Optional[str] = None
