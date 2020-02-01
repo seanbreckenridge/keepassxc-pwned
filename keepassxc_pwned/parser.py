@@ -97,7 +97,7 @@ class Database(AutoRepr):
         """
         Returns the password for this database
         If the KEEPASSXC_PWNED_PASSWD environment variable is set,
-        uses that else, prompts the user for password
+        uses that, else, prompts the user for password
         """
         if self._password is not None:
             return self._password
