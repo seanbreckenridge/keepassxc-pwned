@@ -38,4 +38,3 @@ def test_default(capsys, caplog):
     ):
         assert output == expected
     assert len(captured_lines) == 4
-

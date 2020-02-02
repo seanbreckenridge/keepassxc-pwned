@@ -25,6 +25,7 @@ def empty_credential(database):
             delattr(cred0, attr)
     return cred0
 
+
 @pytest.fixture()
 def basic_credential(database):
     credentials = database.credentials
@@ -54,8 +55,9 @@ def test_database_cached_values(database):
     assert database._credentials is not None
     database.credentials
 
-#@patch("getpass.getpass")
-#def test_database_password(patched_getpass):
+
+# @patch("getpass.getpass")
+# def test_database_password(patched_getpass):
 #    patched_getpass.return_value = ""
 #    database: Database = Database(pathlib.Path(db_file_loc))
 #    assert database._password is None
@@ -65,13 +67,15 @@ def test_database_cached_values(database):
 #    assert database._credentials is None
 #
 
+
 def test_type_not_credential(basic_credential):
     assert "5" != basic_credential
+
 
 def test_no_attributes(empty_credential, basic_credential):
     setattr(empty_credential, "password", "doesnt_match")  # causes attribute error else
     assert empty_credential == basic_credential
 
+
 def test_display_fails(empty_credential):
     assert empty_credential.display() is None
-

@@ -52,6 +52,7 @@ def test_empty_db_keyfile(empty_db_keyfile):
 def test_empty_db_with_environment_var(empty_db_with_environment_var):
     assert len(empty_db_with_environment_var.credentials) == 0
 
+
 def test_keyfile_with_main_wrapper(capsys):
     os.environ["KEEPASSXC_PWNED_PASSWD"] = kdbx_password
     main_wrapper(False, key_file, False, True, key_protected_kdbx_db)
