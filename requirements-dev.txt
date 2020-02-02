@@ -3,3 +3,5 @@ pexpect
 pytest
 vcrpy
 responses
+pytest-cov
+codecov
