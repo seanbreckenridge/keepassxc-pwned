@@ -17,5 +17,7 @@ addons:
     update: true
 script:
  - mypy keepassxc_pwned
- - pytest
+ - pytest --cov-report term --cov=keepassxc_pwned tests/
+after_success:
+ - codecov
 
