@@ -15,34 +15,34 @@ from .exceptions import PwnedPasswordException
     "--plaintext",
     default=False,
     is_flag=True,
-    help="Print breached passwords in plaintext; defaults to sha1 hashes.",
-)
-@click.option(
-    "-k",
-    "--key-file",
-    required=False,
-    type=click.Path(exists=True),
-    help="Key file for the database",
-)
+    help="Print breached passwords in plaintext; defaults to sha1 hashes.")
+@click.option("-k",
+              "--key-file",
+              required=False,
+              type=click.Path(exists=True),
+              help="Key file for the database")
 @click.option("-v",
               "--verbose",
               default=False,
               is_flag=True,
               help="Print debug messages")
+@click.option("-q",
+              "--quiet",
+              default=False,
+              is_flag=True,
+              help="Don't print status messages, just the summary")
 @click.option(
-    "-q",
-    "--quiet",
-    default=False,
-    is_flag=True,
-    help="Don't print status messages, just the summary",
-)
+    "--keepassxc-cli",
+    type=click.Path(exists=True),
+    help="Specify a different location/name for the keepassxc-cli binary")
 @click.argument("database", required=True, type=click.Path(exists=True))
-def main(plaintext, key_file, verbose, quiet, database):
+def main(plaintext, key_file, verbose, quiet, database, keepassxc_cli):
     """Check a keepassxc database against previously cracked haveibeenpwned passwords"""
-    main_wrapper(plaintext, key_file, verbose, quiet, database)
+    main_wrapper(plaintext, key_file, verbose, quiet, database, keepassxc_cli)
 
 
-def main_wrapper(plaintext, key_file, verbose, quiet, database):
+def main_wrapper(plaintext, key_file, verbose, quiet, database,
+                 keepassxc_cli_location):
     """Called from main click command"""
 
     # setup logs before other imports to ensure correct log level
@@ -58,9 +58,12 @@ def main_wrapper(plaintext, key_file, verbose, quiet, database):
     from .parser import Database, Credential
     from .cache import PasswordCache
 
+    if keepassxc_cli_location is not None:
+        keepassxc_cli_location = pathlib.Path(keepassxc_cli_location)
     if key_file is not None:
         key_file: pathlib.Path = pathlib.Path(key_file)
-    db: Database = Database(pathlib.Path(database), key_file)
+    db: Database = Database(pathlib.Path(database), key_file,
+                            keepassxc_cli_location)
     # maps sha1 hashes to credentials and their occurrence counts
     breached_passwords: List[Credential] = []
     pw_cache: Mapping[str, int] = PasswordCache()
