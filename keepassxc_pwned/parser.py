@@ -54,9 +54,8 @@ class Credential(AutoRepr):
         if self._sha1 is None:
             if self.password is not None:  # type: ignore
                 self._sha1 = (
-                    hashlib.sha1(self.password.encode(
-                        "utf-8")).hexdigest().upper()  # type: ignore
-                )
+                    hashlib.sha1(self.password.encode(  # type: ignore
+                        "utf-8")).hexdigest().upper())
         return self._sha1
 
     def __eq__(self, other):

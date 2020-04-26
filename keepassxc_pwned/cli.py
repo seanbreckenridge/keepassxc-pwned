@@ -31,10 +31,9 @@ from .exceptions import PwnedPasswordException
               default=False,
               is_flag=True,
               help="Don't print status messages, just the summary")
-@click.option(
-    "--keepassxc-cli",
-    type=click.Path(exists=True),
-    help="Specify a different location/name for the keepassxc-cli binary")
+@click.option("--keepassxc-cli",
+              type=click.Path(exists=True),
+              help="Specify a different location for the keepassxc-cli binary")
 @click.argument("database", required=True, type=click.Path(exists=True))
 def main(plaintext, key_file, verbose, quiet, database, keepassxc_cli):
     """Check a keepassxc database against previously cracked haveibeenpwned passwords"""

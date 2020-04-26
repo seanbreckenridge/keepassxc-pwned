@@ -6,8 +6,8 @@ This checks a [KeePassXC](https://keepassxc.org/) database against previously cr
 
 #### Requirements
 
-* `keepassxc-cli` binary (typically installed with KeePassXC)
-* python 3.6 or above
+- `keepassxc-cli` binary (typically installed with KeePassXC)
+- python 3.6 or above
 
 #### Install
 
@@ -24,12 +24,16 @@ Usage: keepassxc_pwned [OPTIONS] DATABASE
   passwords
 
 Options:
-  -p, --plaintext      Print breached passwords in plaintext; defaults to sha1
-                       hashes.
-  -k, --key-file PATH  Key file for the database
-  -v, --verbose        Print debug messages
-  -q, --quiet          Don't print status messages, just the summary
-  --help               Show this message and exit.
+  -p, --plaintext       Print breached passwords in plaintext; defaults to
+                        sha1 hashes.
+
+  -k, --key-file PATH   Key file for the database
+  -v, --verbose         Print debug messages
+  -q, --quiet           Don't print status messages, just the summary
+  --keepassxc-cli PATH  Specify a different location for the keepassxc-cli
+                        binary
+
+  --help                Show this message and exit.
 ```
 
 Sample Run:
@@ -59,7 +63,7 @@ from keepassxc_pwned import check_password
 check_password("password")
 ```
 
-*Note: `check_password` doesn't attempt to do any rate limiting.*
+_Note: `check_password` doesn't attempt to do any rate limiting._
 
 ... or enter the password manually...
 
@@ -95,8 +99,7 @@ If `keepassxc-cli` fails with an error message like "Invalid Command extract.", 
 
 #### Tests
 
-* Clone this repository
-* Install dev dependencies: `pip3 install -r requirements-dev.txt`
-* `mypy keepassxc_pwned`
-* `pytest`
-
+- Clone this repository
+- Install dev dependencies: `pip3 install -r requirements-dev.txt`
+- `mypy keepassxc_pwned`
+- `pytest`

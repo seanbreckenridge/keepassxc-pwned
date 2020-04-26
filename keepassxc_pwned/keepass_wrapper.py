@@ -38,15 +38,15 @@ class KeepassWrapper:
 
         if keepassxc_cli_location is None:
             # search for keepassxc-cli which default name on $PATH
-            keepassxc_cli_location = shutil.which(
+            keepassxc_location_output = shutil.which(
                 self.__class__.KEEPASSXC_CLI_NAME)
-            if keepassxc_cli_location is None:
+            if keepassxc_location_output is None:
                 logger.critical(
                     "Could not find a binary called {} on your $PATH.".format(
                         self.__class__.KEEPASSXC_CLI_NAME))
                 sys.exit(1)
             self.keepassxc_cli_location: pathlib.Path = pathlib.Path(
-                keepassxc_cli_location)
+                keepassxc_location_output)
         else:
             self.keepassxc_cli_location = keepassxc_cli_location
         logger.debug("keepassxc-cli location: {}".format(
