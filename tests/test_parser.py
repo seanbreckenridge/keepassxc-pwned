@@ -73,7 +73,8 @@ def test_type_not_credential(basic_credential):
 
 
 def test_no_attributes(empty_credential, basic_credential):
-    setattr(empty_credential, "password", "doesnt_match")  # causes attribute error else
+    setattr(empty_credential, "password",
+            "doesnt_match")  # causes attribute error else
     assert empty_credential == basic_credential
 
 

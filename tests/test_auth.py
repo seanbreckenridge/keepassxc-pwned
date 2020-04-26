@@ -59,4 +59,5 @@ def test_keyfile_with_main_wrapper(capsys):
     captured = capsys.readouterr()
     captured_lines = captured.out.splitlines()
     assert 1 == len(captured_lines)
-    assert captured_lines[0] == "None of your passwords have been found breached."
+    assert captured_lines[
+        0] == "None of your passwords have been found breached."

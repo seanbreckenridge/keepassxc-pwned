@@ -41,5 +41,4 @@ def test_no_keepass_cli(mock_shutil_which, caplog):
         assert KeepassWrapper.verify_binary_exists()
     assert (
         "Could not find the keepassxc-cli binary. Verify its installed and on your $PATH."
-        in caplog.text
-    )
+        in caplog.text)

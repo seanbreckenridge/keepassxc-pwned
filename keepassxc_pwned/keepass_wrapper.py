@@ -17,9 +17,10 @@ class KeepassWrapper:
     Functions that create a subprocess and call the keepassxc-cli shell command
     """
 
-    subprocess_piped = partial(
-        subprocess.run, encoding="utf-8", stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
+    subprocess_piped = partial(subprocess.run,
+                               encoding="utf-8",
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
 
     @staticmethod
     def verify_binary_exists():
@@ -34,8 +35,7 @@ class KeepassWrapper:
     def version() -> StrictVersion:
         """Returns the KeepassXC Version"""
         version_proc: subprocess.CompletedProcess = KeepassWrapper.subprocess_piped(
-            shlex.split("keepassxc-cli --version")
-        )
+            shlex.split("keepassxc-cli --version"))
         version_str: str = version_proc.stdout.strip()
         logger.debug("keepassxc-cli version: {}".format(version_str))
         return StrictVersion(version_str)
@@ -64,14 +64,18 @@ class KeepassWrapper:
     ) -> str:
         """Calls the keepassxc-cli export command, returns the output from the command"""
 
-        command_parts: List[str] = ["keepassxc-cli", cls.backwards_compatible_export()]
+        command_parts: List[str] = [
+            "keepassxc-cli",
+            cls.backwards_compatible_export()
+        ]
         if database_keyfile is not None:
             command_parts.extend(["-k", str(database_keyfile)])
         command_parts.append(str(database_file))
         command_str: str = " ".join(command_parts)
         logger.debug("Export database command: {}".format(command_str))
         keepassxc_output: subprocess.CompletedProcess = KeepassWrapper.subprocess_piped(
-            shlex.split(command_str), input=database_password,
+            shlex.split(command_str),
+            input=database_password,
         )
         if keepassxc_output.returncode != 0:
             logger.critical(keepassxc_output.stderr)

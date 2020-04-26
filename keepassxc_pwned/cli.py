@@ -24,9 +24,11 @@ from .exceptions import PwnedPasswordException
     type=click.Path(exists=True),
     help="Key file for the database",
 )
-@click.option(
-    "-v", "--verbose", default=False, is_flag=True, help="Print debug messages"
-)
+@click.option("-v",
+              "--verbose",
+              default=False,
+              is_flag=True,
+              help="Print debug messages")
 @click.option(
     "-q",
     "--quiet",
@@ -70,26 +72,19 @@ def main_wrapper(plaintext, key_file, verbose, quiet, database):
             if occurrence_count > 0:
                 logger.info(
                     "Found password for '{}' {} times in the dataset!".format(
-                        credential.display(), occurrence_count
-                    )
-                )
+                        credential.display(), occurrence_count))
                 breached_passwords.append(credential)
         except PwnedPasswordException as http_err:
             logger.critical(str(http_err))
             logger.critical("Ignoring previous entry due to HTTP error")
     breached_passwords_count = len(breached_passwords)
     if breached_passwords_count > 0:
-        print(
-            "Found {} previously breached password{}:".format(
-                breached_passwords_count, "s" if breached_passwords_count > 1 else ""
-            )
-        )
+        print("Found {} previously breached password{}:".format(
+            breached_passwords_count,
+            "s" if breached_passwords_count > 1 else ""))
         for credential in breached_passwords:
             display_pw: str = credential.password if plaintext else credential.sha1
-            print(
-                "{}:{}:{}".format(
-                    credential.display(), display_pw, pw_cache[credential.sha1]
-                )
-            )
+            print("{}:{}:{}".format(credential.display(), display_pw,
+                                    pw_cache[credential.sha1]))
     else:
         print("None of your passwords have been found breached.")

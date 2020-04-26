@@ -8,7 +8,6 @@ import requests
 from .log import logger
 from .exceptions import PwnedPasswordException
 
-
 default_headers = {"User-Agent": "keepassxc-pwned"}
 
 
@@ -22,10 +21,14 @@ def request_password_hash(hash_head: str) -> requests.Response:
     res = requests.get(url, headers=default_headers)
     if res.status_code >= 400:
         # on occasion I've had random 409 cloudflare errors
-        if res.status_code in [400, 403, 404]: # https://haveibeenpwned.com/API/v2#ResponseCodes
-            raise PwnedPasswordException(
-                {"url": url, "status_code": res.status_code, "http_text": res.text}
-            )
+        if res.status_code in [
+                400, 403, 404
+        ]:  # https://haveibeenpwned.com/API/v2#ResponseCodes
+            raise PwnedPasswordException({
+                "url": url,
+                "status_code": res.status_code,
+                "http_text": res.text
+            })
         else:
             logger.warning("Request failed, retrying...")
             time.sleep(10)
@@ -34,7 +37,8 @@ def request_password_hash(hash_head: str) -> requests.Response:
 
 
 # Adapted from: https://github.com/mikepound/pwned-search/blob/8efd8ffedd398756e26d52ef51206ba6d8e28f57/pwned.py#L12
-def lookup_pwned(passwd: Optional[str] = None, pw_hash: Optional[str] = None) -> int:
+def lookup_pwned(passwd: Optional[str] = None,
+                 pw_hash: Optional[str] = None) -> int:
     """
     Returns number of times password was seen in pwned database
     Raises PwnedPasswordException on unrecoverable errors

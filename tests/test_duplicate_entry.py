@@ -28,7 +28,7 @@ def test_default(capsys, caplog):
     captured = capsys.readouterr()
     captured_lines = captured.out.splitlines()
     for output, expected in zip(
-        captured_lines,
+            captured_lines,
         [
             "Found 3 previously breached passwords:",
             "entry:5BAA61E4C9B93F3F0682250B6CF8331B7EE68FD8:3730471",
