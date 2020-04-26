@@ -5,6 +5,10 @@ from keepassxc_pwned.keepass_wrapper import KeepassWrapper
 
 from .common import *
 
+# use keepassxc.cli wrapper script to test changing location of keepassxc-cli
+keepass_different_binary = os.path.abspath(
+    os.path.join(this_dir, "keepassxc.cli"))
+
 
 class OldKeepassWrapper(KeepassWrapper):
     def version(self) -> StrictVersion:
@@ -40,3 +44,9 @@ def test_no_keepass_cli(mock_shutil_which, caplog):
         assert KeepassWrapper().verify_binary_exists()
     assert ("Could not find a binary called keepassxc-cli on your $PATH."
             in caplog.text)
+
+
+def test_use_different_binary():
+    k = KeepassWrapper(keepass_different_binary)
+    assert k.keepassxc_cli_location == keepass_different_binary
+    assert k.backwards_compatible_export() == "export"

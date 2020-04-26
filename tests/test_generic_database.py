@@ -12,6 +12,9 @@ from keepassxc_pwned.cli import main_wrapper
 
 from .common import *
 
+keepass_different_binary = os.path.abspath(
+    os.path.join(this_dir, "keepassxc.cli"))
+
 db_file_loc = os.path.join(db_files, "generic_has_passwords.kdbx")
 
 
@@ -99,3 +102,15 @@ def test_plaintext(capsys, caplog):
     # assert len(captured_lines) == 2
     assert captured_lines[0] == "Found 1 previously breached password:"
     assert captured_lines[-1] == "breached_entry:hunter42:1054"
+
+
+# test passing keepassxc-cli file
+@vcr.use_cassette("tests/vcr_cassettes/test_plaintext.yaml")
+def test_change_keepassxc_cli_flag(capsys, caplog):
+    main_wrapper(True, None, True, False, db_file_loc,
+                 keepass_different_binary)
+    captured = capsys.readouterr()
+    captured_lines = captured.out.splitlines()
+    captured_logs = list(map(lambda x: x.getMessage(), caplog.records))
+    assert captured_lines[0] == "Found 1 previously breached password:"
+    assert any(["tests/keepassxc.cli" in line for line in captured_logs])

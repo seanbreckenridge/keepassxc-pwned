@@ -80,6 +80,8 @@ You can read more about that [here](https://www.troyhunt.com/ive-just-launched-p
 
 #### Troubleshooting
 
+If `keepassxc-cli` is named something else on your installation of KeepassXC, specify the full path by providing the `--keepassxc-cli` flag, like: `keepassxc_pwned --keepassxc-cli "$(which keepassxc.cli)" ~/Documents/updated_database.kdbx`
+
 If you get the following error while using `keepassxc-cli`:
 
 ```

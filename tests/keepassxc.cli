@@ -1,0 +1,3 @@
+#!/bin/sh
+# wrapper script to test changing the name of the keepassxc-cli bininary
+keepassxc-cli "$@"
