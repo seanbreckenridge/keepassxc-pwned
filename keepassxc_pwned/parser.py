@@ -38,8 +38,10 @@ class Credential(AutoRepr):
                 if key in self.__class__.parsed_attrs:
                     setattr(self, key, value)
 
-        if not hasattr(self, "password") or (hasattr(self, "password") and getattr(self, "password") is None):
-            raise ValueError("Ignoring entry with no password: {}".format(self))
+        if not hasattr(self, "password") or (hasattr(
+                self, "password") and getattr(self, "password") is None):
+            raise ValueError(
+                "Ignoring entry with no password: {}".format(self))
 
         self._sha1: Optional[str] = None
 
@@ -52,19 +54,15 @@ class Credential(AutoRepr):
         if self._sha1 is None:
             if self.password is not None:  # type: ignore
                 self._sha1 = (
-                    hashlib.sha1(self.password.encode("utf-8")).hexdigest().upper()  # type: ignore
-                )
+                    hashlib.sha1(self.password.encode(  # type: ignore
+                        "utf-8")).hexdigest().upper())
         return self._sha1
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
         try:
-            return (
-                self.title == other.title
-                and self.username == other.username
-                and self.password == other.password
-            )
+            return self.title == other.title and self.username == other.username and self.password == other.password
         except AttributeError:
             return self.password == other.password
 
@@ -85,7 +83,10 @@ class Database(AutoRepr):
     attrs = ["database_file", "key_file"]
 
     def __init__(
-        self, database_file: pathlib.Path, key_file: Optional[pathlib.Path] = None,
+        self,
+        database_file: pathlib.Path,
+        key_file: Optional[pathlib.Path] = None,
+        keepassxc_cli_location: Optional[pathlib.Path] = None,
     ):
         self.database_file = database_file
         self.key_file = key_file
@@ -93,6 +94,8 @@ class Database(AutoRepr):
         self._xml_tree: Optional[XMLElement] = None
         self._password: Optional[str] = None
         self._credentials: Optional[List[Credential]] = None
+
+        self.keepass_wrapper = KeepassWrapper(keepassxc_cli_location)
 
     @property
     def password(self) -> str:
@@ -110,9 +113,8 @@ class Database(AutoRepr):
             self._password = os.environ["KEEPASSXC_PWNED_PASSWD"]
             return self._password
         else:
-            self._password = getpass(
-                "Insert password for {}: ".format(self.database_file)
-            )
+            self._password = getpass("Insert password for {}: ".format(
+                self.database_file))
             return self._password
 
     @property
@@ -131,7 +133,7 @@ class Database(AutoRepr):
         """
         if self._xml_tree is not None:
             return  # already called, use cached value
-        keepass_export_process_output: str = KeepassWrapper.export_database(
+        keepass_export_process_output: str = self.keepass_wrapper.export_database(
             database_file=self.database_file,
             database_password=self.password,  # calls getpass if not set
             database_keyfile=self.key_file,
@@ -157,5 +159,6 @@ class Database(AutoRepr):
                     self._credentials.append(cred)
                 except ValueError as no_pw:
                     logger.debug(str(no_pw))
-        logger.debug("KeepassXC parsed entry count: {}".format(len(self._credentials)))
+        logger.debug("KeepassXC parsed entry count: {}".format(
+            len(self._credentials)))
         return self._credentials

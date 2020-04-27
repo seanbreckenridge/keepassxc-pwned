@@ -18,6 +18,5 @@ class PwnedPasswordException(AutoRepr, Exception):
         super(PwnedPasswordException, self).__init__(str(self))
 
     def __str__(self) -> str:
-        return "Error fetching {}\n{}: {}".format(
-            self.url, self.status_code, self.http_text
-        )
+        return "Error fetching {}\n{}: {}".format(self.url, self.status_code,
+                                                  self.http_text)

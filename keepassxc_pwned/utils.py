@@ -9,12 +9,10 @@ class AutoRepr:
 
         return "{}({})".format(
             self.__class__.__name__,
-            ", ".join(
-                [
-                    "{}={}".format(a, repr(getattr(self, a, None)))
-                    for a in self.__class__.attrs  # type: ignore
-                ]
-            ),
+            ", ".join([
+                "{}={}".format(a, repr(getattr(self, a, None)))
+                for a in self.__class__.attrs  # type: ignore
+            ]),
         )
 
     def __str__(self) -> str:

@@ -55,8 +55,9 @@ def test_empty_db_with_environment_var(empty_db_with_environment_var):
 
 def test_keyfile_with_main_wrapper(capsys):
     os.environ["KEEPASSXC_PWNED_PASSWD"] = kdbx_password
-    main_wrapper(False, key_file, False, True, key_protected_kdbx_db)
+    main_wrapper(False, key_file, False, True, key_protected_kdbx_db, None)
     captured = capsys.readouterr()
     captured_lines = captured.out.splitlines()
     assert 1 == len(captured_lines)
-    assert captured_lines[0] == "None of your passwords have been found breached."
+    assert captured_lines[
+        0] == "None of your passwords have been found breached."
