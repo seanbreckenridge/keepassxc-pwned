@@ -36,7 +36,7 @@ setup(
             "keepassxc_pwned = keepassxc_pwned.cli:main"
         ]
     },
-    url='https://github.com/seanbreckenridge/keepassxc-pwned',
+    url='https://gitlab.com/seanbreckenridge/keepassxc-pwned',
     version='0.3.1',
     zip_safe=True,
 )
