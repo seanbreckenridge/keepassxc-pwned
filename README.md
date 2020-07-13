@@ -1,6 +1,29 @@
 # KeepassXC-Pwned
 
-[![PyPi version](https://img.shields.io/pypi/v/keepassxc_pwned.svg)](https://pypi.python.org/pypi/keepassxc_pwned) [![Codecov](https://img.shields.io/codecov/c/github/seanbreckenridge/keepassxc-pwned.svg?style=flat-square)](https://codecov.io/gh/seanbreckenridge/keepassxc-pwned/) [![Python 3.6|3.7|3.8|3.9](https://img.shields.io/pypi/pyversions/keepassxc_pwned.svg)](https://pypi.python.org/pypi/keepassxc_pwned) [![Build Status](https://travis-ci.com/seanbreckenridge/keepassxc-pwned.svg?branch=master)](https://travis-ci.com/seanbreckenridge/keepassxc-pwned) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+### Project Status
+
+The functionality to check passwords again the HIBP database has been built into keepassxc since version 2.6.0 (Database > Database Reports > HIBP). This project should still work on keepassxc versions `<2.6.0`, though fails due to what I assume is a change in the specification for the `keepassxc-cli` export post version 2.6.0. I don't plan to update this to work with keepassxc 2.6.0 seeing as the functionality this offered is now built-in. This can still be used as a utility module to check passwords against the HIBP database:
+
+In python code:
+
+```
+from keepassxc_pwned import check_password
+check_password("password")
+```
+
+_Note: `check_password` doesn't attempt to do any rate limiting._
+
+or, by entering the password manually:
+
+```
+$ python3 -m keepassxc_pwned
+Password to check:
+Found password 1054 times!
+```
+
+I'll leave this project un-archived in case someone wishes to contribute changes, but I don't see a glaring reason to.
+
+---- 
 
 This checks a [KeePassXC](https://keepassxc.org/) database against previously cracked [haveibeenpwned](https://haveibeenpwned.com/) passwords.
 
@@ -54,23 +77,6 @@ Checking password for stackoverflow...
 Checking password for wikipedia...
 Found 1 previously breached password:
 minecraft:5BAA61E4C9B93F3F0682250B6CF8331B7EE68FD8:3
-```
-
-You can also import this to use in python code...
-
-```
-from keepassxc_pwned import check_password
-check_password("password")
-```
-
-_Note: `check_password` doesn't attempt to do any rate limiting._
-
-... or enter the password manually...
-
-```
-$ python3 -m keepassxc_pwned
-Password to check:
-Found password 1054 times!
 ```
 
 #### Privacy concerns
