@@ -1,3 +1,4 @@
+import sys
 import vcr
 
 from unittest.mock import patch
@@ -28,3 +29,4 @@ def test_user_input_password_not_found(getpass, capsys):
     captured_lines = captured.out.splitlines()
     assert len(captured_lines) == 1
     assert captured_lines[0] == "Could not find that password in the dataset."
+    del sys.modules['keepassxc_pwned.__main__']
