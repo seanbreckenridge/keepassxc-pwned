@@ -20,9 +20,6 @@ $ python3 -m keepassxc_pwned
 Password to check:
 Found password 1054 times!
 ```
-
-I'll leave this project un-archived in case someone wishes to contribute changes, but I don't see a glaring reason to.
-
 ---- 
 
 This checks a [KeePassXC](https://keepassxc.org/) database against previously cracked [haveibeenpwned](https://haveibeenpwned.com/) passwords.
